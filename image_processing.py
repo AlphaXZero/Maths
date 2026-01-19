@@ -82,6 +82,22 @@ def do_exercise_7():
     Image.fromarray(array).save("./output/ex7_grey_transformation.jpeg")
 
 
+def do_exercise_8(light_ammount: int):
+    def add_light(x):
+        return min(int(x) + light_ammount, 255)
+
+    image = Image.open("./images/chat-vert.jpg")
+    array = np.array(image)
+    for i in range(array.shape[0]):
+        for j in range(array.shape[1]):
+            array[i][j] = [
+                add_light(array[i][j][0]),
+                add_light(array[i][j][1]),
+                add_light(array[i][j][2]),
+            ]
+    Image.fromarray(array).save("./output/ex8_lighten.jpeg")
+
+
 def do_convolution(matrix: np.ndarray, pattern: np.ndarray):
     output = np.zeros(matrix.shape)
     matrix = np.insert(matrix, 0, np.zeros((matrix.shape[1])), axis=0)
@@ -107,7 +123,8 @@ if __name__ == "__main__":
     # do_exercise_5()
     # do_exercise_6()
     # do_exercise_6_2()
-    do_exercise_7()
+    # do_exercise_7()
+    do_exercise_8(120)
     # isolate_red_treshold()
     # print(
     #     do_convolution(
