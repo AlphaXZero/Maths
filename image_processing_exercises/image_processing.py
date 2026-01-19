@@ -1,5 +1,6 @@
 from PIL import Image
 import numpy as np
+from math import prod
 
 
 def do_exercise_1():
@@ -121,7 +122,7 @@ def do_exercise_9(percentage_first_image: int):
     Image.fromarray(array1).save("./output/ex9_combine_images.jpeg")
 
 
-def do_exercice_10():
+def do_exercise_10():
     image1 = Image.open("./images/chat-vert.jpg")
     image2 = Image.open("./images/fond-pour-chat-vert.jpg")
 
@@ -131,6 +132,32 @@ def do_exercice_10():
         for j in range(array2.shape[1]):
             array1[i][j] = array1[i][j] if array1[i][j][1] != 255 else array2[i][j]
     Image.fromarray(array1).save("./output/ex10_green_background.jpeg")
+
+
+def do_exercise_11():
+    def get_average_pixels(cell):
+        return sum(cell) // 3
+
+    image = Image.open("./images/Lenna512.jpg")
+    array = np.array(image).astype(dtype=int)
+
+    array_flatten = array.reshape(prod(array.shape[0:2]), 3)
+    i_min = min((map(get_average_pixels, array_flatten)))
+    i_max = max((map(get_average_pixels, array_flatten)))
+
+    def normalise_intensity(px):
+        r, g, b = px
+        i = get_average_pixels(px)
+        if i == 0 or i_max == i_min:
+            return (0, 0, 0)
+        i_n = 255 * (i - i_min) / ((i_max - i_min) * i)
+        return (min(int(r * i_n), 255), min(int(g * i_n), 255), min(int(b * i_n), 255))
+
+    for i in range(array.shape[0]):
+        for j in range(array.shape[1]):
+            array[i][j] = normalise_intensity(array[i][j])
+    array = array.astype(dtype=np.uint8)
+    Image.fromarray(array).save("./output/ex11_change_constrast.jpeg")
 
 
 if __name__ == "__main__":
@@ -143,5 +170,6 @@ if __name__ == "__main__":
     # do_exercise_6_2()
     # do_exercise_7()
     # do_exercise_8(120)
-    do_exercise_9(40)
-    do_exercice_10()
+    # do_exercise_9(40)
+    # do_exercise_10()
+    do_exercise_11()
