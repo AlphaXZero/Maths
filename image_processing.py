@@ -55,23 +55,17 @@ def do_exercise_6():
     Image.fromarray(array).save("./output/ex6_isolate_red.jpeg")
 
 
-def isolate_red_treshold():
+def do_exercise_6_2():
     image = Image.open("./images/4-2-03.jpg")
     array = np.array(image)
     for i in range(array.shape[0]):
         for j in range(array.shape[1]):
             r, g, b = array[i][j]
-            try:
-                if not (
-                    abs(int(r) - int(g)) < 40
-                    and b < 100
-                    and 40 < r < 200
-                    and 40 < g < 200
-                ):
-                    array[i][j] = [0, 0, 0]
-            except:
-                print(abs(r - g))
-    Image.fromarray(array).save("output.jpg")
+            if not (
+                abs(int(r) - int(g)) < 40 and b < 100 and 40 < r < 200 and 40 < g < 200
+            ):
+                array[i][j] = [0, 0, 0]
+    Image.fromarray(array).save("./output/ex6_2_isolate_yellow.jpg")
 
 
 def do_convolution(matrix: np.ndarray, pattern: np.ndarray):
@@ -97,7 +91,8 @@ if __name__ == "__main__":
     # do_exercise_3()
     # do_exercise_4()
     # do_exercise_5()
-    do_exercise_6()
+    # do_exercise_6()
+    do_exercise_6_2()
     # isolate_red_treshold()
     # print(
     #     do_convolution(
