@@ -68,6 +68,20 @@ def do_exercise_6_2():
     Image.fromarray(array).save("./output/ex6_2_isolate_yellow.jpg")
 
 
+def do_exercise_7():
+    image = Image.open("./images/chat-vert.jpg")
+    array = np.array(image)
+    for i in range(array.shape[0]):
+        for j in range(array.shape[1]):
+            lum = (
+                int(array[i][j][0] * 0.2126)
+                + int(array[i][j][1] * 0.7152)
+                + int(array[i][j][2] * 0.0722)
+            )
+            array[i][j] = [lum, lum, lum]
+    Image.fromarray(array).save("./output/ex7_grey_transformation.jpeg")
+
+
 def do_convolution(matrix: np.ndarray, pattern: np.ndarray):
     output = np.zeros(matrix.shape)
     matrix = np.insert(matrix, 0, np.zeros((matrix.shape[1])), axis=0)
@@ -92,7 +106,8 @@ if __name__ == "__main__":
     # do_exercise_4()
     # do_exercise_5()
     # do_exercise_6()
-    do_exercise_6_2()
+    # do_exercise_6_2()
+    do_exercise_7()
     # isolate_red_treshold()
     # print(
     #     do_convolution(
