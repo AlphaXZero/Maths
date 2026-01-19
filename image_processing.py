@@ -101,7 +101,7 @@ def do_exercise_8(light_ammount: int):
 def do_exercise_9(percentage_first_image: int):
     percentage_second_image = 100 - percentage_first_image
 
-    def add_light(a, b):
+    def combine_pixels(a, b):
         return min(
             int(a) * percentage_first_image / 100
             + int(b) * percentage_second_image / 100,
@@ -115,11 +115,23 @@ def do_exercise_9(percentage_first_image: int):
     for i in range(array1.shape[0]):
         for j in range(array2.shape[1]):
             array1[i][j] = [
-                add_light(array1[i][j][0], array2[i][j][0]),
-                add_light(array1[i][j][1], array2[i][j][0]),
-                add_light(array1[i][j][2], array2[i][j][0]),
+                combine_pixels(array1[i][j][0], array2[i][j][0]),
+                combine_pixels(array1[i][j][1], array2[i][j][1]),
+                combine_pixels(array1[i][j][2], array2[i][j][2]),
             ]
     Image.fromarray(array1).save("./output/ex9_combine_images.jpeg")
+
+
+def do_exercice_10():
+    image1 = Image.open("./images/chat-vert.jpg")
+    image2 = Image.open("./images/fond-pour-chat-vert.jpg")
+
+    array1 = np.array(image1)
+    array2 = np.array(image2)
+    for i in range(array1.shape[0]):
+        for j in range(array2.shape[1]):
+            array1[i][j] = array1[i][j] if array1[i][j][1] != 255 else array2[i][j]
+    Image.fromarray(array1).save("./output/ex10_green_background.jpeg")
 
 
 def do_convolution(matrix: np.ndarray, pattern: np.ndarray):
@@ -150,3 +162,4 @@ if __name__ == "__main__":
     # do_exercise_7()
     # do_exercise_8(120)
     do_exercise_9(40)
+    do_exercice_10()
