@@ -98,6 +98,30 @@ def do_exercise_8(light_ammount: int):
     Image.fromarray(array).save("./output/ex8_lighten.jpeg")
 
 
+def do_exercise_9(percentage_first_image: int):
+    percentage_second_image = 100 - percentage_first_image
+
+    def add_light(a, b):
+        return min(
+            int(a) * percentage_first_image / 100
+            + int(b) * percentage_second_image / 100,
+            255,
+        )
+
+    image1 = Image.open("./images/chat-vert.jpg")
+    image2 = Image.open("./images/fond-pour-chat-vert.jpg")
+    array1 = np.array(image1)
+    array2 = np.array(image2)
+    for i in range(array1.shape[0]):
+        for j in range(array2.shape[1]):
+            array1[i][j] = [
+                add_light(array1[i][j][0], array2[i][j][0]),
+                add_light(array1[i][j][1], array2[i][j][0]),
+                add_light(array1[i][j][2], array2[i][j][0]),
+            ]
+    Image.fromarray(array1).save("./output/ex9_combine_images.jpeg")
+
+
 def do_convolution(matrix: np.ndarray, pattern: np.ndarray):
     output = np.zeros(matrix.shape)
     matrix = np.insert(matrix, 0, np.zeros((matrix.shape[1])), axis=0)
@@ -124,36 +148,5 @@ if __name__ == "__main__":
     # do_exercise_6()
     # do_exercise_6_2()
     # do_exercise_7()
-    do_exercise_8(120)
-    # isolate_red_treshold()
-    # print(
-    #     do_convolution(
-    #         np.array([[2, 1, 3, 0], [1, 1, 0, 5], [3, 3, 1, 0], [2, 0, 0, 2]]),
-    #         np.array([[3, 0, 1], [0, 1, 2], [2, 0, 1]]),
-    #     )
-    # )
-    # print(
-    #     convolve2d(
-    #         np.array([[2, 1, 3, 0], [1, 1, 0, 5], [3, 3, 1, 0], [2, 0, 0, 2]]),
-    #         np.array([[1, 0, 2], [2, 1, 0], [1, 0, 3]]),
-    #         mode="same",
-    #     )
-    # )
-    # image = Image.open("./images/4-2-03.jpg")
-    # image = image.convert("L")
-    # array = np.array(image)
-    # blur_ammount = 60
-    # Image.fromarray(array).save("preoutput.jpeg")
-    # array = convolve2d(
-    #     array,
-    #     np.ones((blur_ammount, blur_ammount)) / blur_ammount**2,
-    #     mode="same",
-    # )
-    # array = convolve2d(
-    #     array,
-    #     np.array([[0, -0.5, 0], [-0.5, 3, -0.5], [0, -0.5, 0]]),
-    #     mode="same",
-    # )
-    # array = np.clip(array, 0, 255).astype(np.uint8)
-
-    # Image.fromarray(array).save("output.jpeg")
+    # do_exercise_8(120)
+    do_exercise_9(40)
