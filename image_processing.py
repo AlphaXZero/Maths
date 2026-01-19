@@ -33,6 +33,19 @@ def do_exercise_4():
     Image.fromarray(np.array([i for i in array[::-1]])).save("./output/ex4_vflip.jpeg")
 
 
+def do_exercise_5():
+    image = Image.open("./images/chat-vert.jpg")
+    array = np.array(image)
+    for i in range(array.shape[0]):
+        for j in range(array.shape[1]):
+            array[i][j] = [
+                255 - array[i][j][0],
+                255 - array[i][j][1],
+                255 - array[i][j][2],
+            ]
+    Image.fromarray(array).save("./output/ex5_negative.jpeg")
+
+
 def green():
     image = Image.open("./images/4-2-03.jpg")
     array = np.array(image)
@@ -91,7 +104,8 @@ if __name__ == "__main__":
     # do_exercise_1()
     # do_exercise_2()
     # do_exercise_3()
-    do_exercise_4()
+    # do_exercise_4()
+    do_exercise_5()
     # isolate_red_treshold()
     # print(
     #     do_convolution(
