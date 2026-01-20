@@ -138,7 +138,7 @@ def do_exercise_11():
     def get_average_pixels(cell):
         return sum(cell) // 3
 
-    image = Image.open("./images/chat-vert.jpg")
+    image = Image.open("./images/fond-pour-chat-vert.jpg")
     array = np.array(image).astype(dtype=int)
     array_flatten = array.reshape(prod(array.shape[0:2]), 3)
     i_min = min((map(get_average_pixels, array_flatten)))
@@ -171,6 +171,11 @@ def do_exercise_12(size: tuple[int]):
     Image.fromarray(array2).save("./output/ex12_resize.jpg")
 
 
+def do_exercise_13():
+    # TODO : que faire ?
+    return None
+
+
 if __name__ == "__main__":
     # do_exercise_1()
     # do_exercise_2()
@@ -184,4 +189,5 @@ if __name__ == "__main__":
     # do_exercise_9(40)
     # do_exercise_10()
     # do_exercise_11()
-    do_exercise_12((900, 900))
+    # do_exercise_12((900, 900))
+    do_exercise_13()
