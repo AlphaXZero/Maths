@@ -146,16 +146,29 @@ def do_exercise_11():
 
     for i in range(array.shape[0]):
         for j in range(array.shape[1]):
-            r, g, b = array[i][j]
+            r, g, b = array[i, j]
             if i_max == i_min:
                 pass
-            array[i][j] = (
+            array[i, j] = (
                 min(max(int(255 * (r - i_min) / (i_max - i_min)), 0), 255),
                 min(max(int(255 * (g - i_min) / (i_max - i_min)), 0), 255),
                 min(max(int(255 * (b - i_min) / (i_max - i_min)), 0), 255),
             )
     array = array.astype(dtype=np.uint8)
     Image.fromarray(array).save("./output/ex11_change_constrast.jpeg")
+
+
+def do_exercise_12(size: tuple[int]):
+    image = Image.open("./images/chat-vert.jpg")
+    array = np.array(image)
+    array2 = np.zeros((size[0], size[1], 3))
+    ratio = array.shape[0] / size[0], array.shape[1] / size[1]
+
+    for i in range(array2.shape[0]):
+        for j in range(array2.shape[1]):
+            array2[i][j] = array[int(i * ratio[0]), int(j * ratio[1])]
+    array2 = array2.astype(dtype=np.uint8)
+    Image.fromarray(array2).save("./output/ex12_resize.jpg")
 
 
 if __name__ == "__main__":
@@ -170,4 +183,5 @@ if __name__ == "__main__":
     # do_exercise_8(120)
     # do_exercise_9(40)
     # do_exercise_10()
-    do_exercise_11()
+    # do_exercise_11()
+    do_exercise_12((900, 900))
