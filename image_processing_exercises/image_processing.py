@@ -138,24 +138,22 @@ def do_exercise_11():
     def get_average_pixels(cell):
         return sum(cell) // 3
 
-    image = Image.open("./images/Lenna512.jpg")
+    image = Image.open("./images/chat-vert.jpg")
     array = np.array(image).astype(dtype=int)
-
     array_flatten = array.reshape(prod(array.shape[0:2]), 3)
     i_min = min((map(get_average_pixels, array_flatten)))
     i_max = max((map(get_average_pixels, array_flatten)))
 
-    def normalise_intensity(px):
-        r, g, b = px
-        i = get_average_pixels(px)
-        if i == 0 or i_max == i_min:
-            return (0, 0, 0)
-        i_n = 255 * (i - i_min) / ((i_max - i_min) * i)
-        return (min(int(r * i_n), 255), min(int(g * i_n), 255), min(int(b * i_n), 255))
-
     for i in range(array.shape[0]):
         for j in range(array.shape[1]):
-            array[i][j] = normalise_intensity(array[i][j])
+            r, g, b = array[i][j]
+            if i_max == i_min:
+                pass
+            array[i][j] = (
+                min(max(int(255 * (r - i_min) / (i_max - i_min)), 0), 255),
+                min(max(int(255 * (g - i_min) / (i_max - i_min)), 0), 255),
+                min(max(int(255 * (b - i_min) / (i_max - i_min)), 0), 255),
+            )
     array = array.astype(dtype=np.uint8)
     Image.fromarray(array).save("./output/ex11_change_constrast.jpeg")
 
