@@ -1,5 +1,6 @@
 import numpy as np
-from scipy.signal import convolve2d, convolve
+from scipy.signal import convolve2d
+from scipy.ndimage import median_filter
 from PIL import Image
 
 
@@ -83,9 +84,20 @@ def do_exercise5(pattern_size):
     Image.fromarray(array).save("./output/ex5_directional_blur.jpeg")
 
 
+def do_exercise6(size):
+    # flemme d'implémenter le filtre median, il faut prendre les x valeurs autour d'un pixel, les trier et prendre le milieu
+    image = Image.open("./images/chat-vert.jpg")
+    array = np.array(image)
+    result = np.zeros_like(array)
+    for i in range(3):
+        result[:, :, i] = median_filter(array[:, :, i], size=size)
+    Image.fromarray(result.astype(np.uint8)).save("./output/ex6_median_blur.jpeg")
+
+
 if __name__ == "__main__":
     # do_exercise1()
     # do_exercise2()
     # do_exercise3(10)
     # do_exercise4()
-    do_exercise5(10)
+    # do_exercise5(10)
+    do_exercise6(5)
