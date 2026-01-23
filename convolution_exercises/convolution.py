@@ -29,7 +29,7 @@ def do_scipy_convolve(matrix: np.array, pattern: np.array) -> np.array:
     for i in range(3):
         # mode=same pour éviter que la sortie soit plus grande que l'entrée
         matrix[:, :, i] = convolve2d(matrix[:, :, i], pattern, mode="same")
-    return matrix
+    return matrix.astype(np.uint8)
 
 
 def do_exercise1():
@@ -48,18 +48,20 @@ def do_exercise2():
     )
 
 
-def do_exercise3():
+def do_exercise3(pattern_size):
     image = Image.open("./images/chat-vert.jpg")
     array = do_scipy_convolve(
-        np.array(image), np.array([[1, 1, 1], [1, 1, 1], [1, 1, 1]]) / 9
+        np.array(image),
+        np.ones((pattern_size, pattern_size)) / (pattern_size**2),
     )
+
     Image.fromarray(array).save("./output/ex3_blur.jpeg")
 
 
 def do_exercise4():
     image = Image.open("./images/chat-vert.jpg")
     array = do_scipy_convolve(
-        np.array(image), np.array([[1, 1, 1], [1, 1, 1], [1, 1, 1]]) / 9
+        np.array(image), np.array([[1, 2, 1], [2, 4, 2], [1, 2, 1]]) / 16
     )
     Image.fromarray(array).save("./output/ex4_gaussian_blur.jpeg")
 
@@ -67,4 +69,5 @@ def do_exercise4():
 if __name__ == "__main__":
     # do_exercise1()
     # do_exercise2()
-    do_exercise3()
+    do_exercise3(10)
+    do_exercise4()
