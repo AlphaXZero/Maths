@@ -22,7 +22,7 @@ def do_convolution(matrix: np.ndarray, pattern: np.ndarray):
                 for x in range(pattern.shape[1]):
                     actual_sum += matrix[i - (1 - y), j - (1 - x)] * pattern[y, x]
             output[i - 1][j - 1] = actual_sum
-    return output
+    return output.astype(int)
 
 
 def do_scipy_convolve(matrix: np.array, pattern: np.array) -> np.array:
@@ -41,11 +41,10 @@ def do_exercise1():
 
 
 def do_exercise2():
-    # TODO : identique et ??
     array = np.array([[2, 1, 3, 0], [1, 1, 0, 5], [3, 3, 1, 0], [2, 0, 0, 2]])
     pattern = np.array([[1, 0, 2], [2, 1, 0], [1, 0, 3]])
     print(
-        f"array: \n {array}\n pattern: \n{pattern}\n Scipy convolution: \n{convolve2d(array, pattern)}"
+        f"array: \n {array}\n pattern: \n{pattern}\n Scipy convolution: \n{convolve2d(array, pattern, mode='same')}"
     )
 
 
@@ -54,8 +53,18 @@ def do_exercise3():
     array = do_scipy_convolve(
         np.array(image), np.array([[1, 1, 1], [1, 1, 1], [1, 1, 1]]) / 9
     )
-    Image.fromarray(array).save("./output/ex1_blur.jpeg")
+    Image.fromarray(array).save("./output/ex3_blur.jpeg")
+
+
+def do_exercise4():
+    image = Image.open("./images/chat-vert.jpg")
+    array = do_scipy_convolve(
+        np.array(image), np.array([[1, 1, 1], [1, 1, 1], [1, 1, 1]]) / 9
+    )
+    Image.fromarray(array).save("./output/ex4_gaussian_blur.jpeg")
 
 
 if __name__ == "__main__":
+    # do_exercise1()
+    # do_exercise2()
     do_exercise3()
