@@ -59,6 +59,7 @@ def do_exercise3(pattern_size):
 
 
 def do_exercise4():
+    # TODO taille + grande ?
     image = Image.open("./images/chat-vert.jpg")
     array = do_scipy_convolve(
         np.array(image), np.array([[1, 2, 1], [2, 4, 2], [1, 2, 1]]) / 16
@@ -66,8 +67,25 @@ def do_exercise4():
     Image.fromarray(array).save("./output/ex4_gaussian_blur.jpeg")
 
 
+def do_exercise5(pattern_size):
+    # TODO que veut dire ?
+    image = Image.open("./images/chat-vert.jpg")
+    pattern = np.ones((pattern_size, pattern_size)) / (
+        (pattern_size**2) - ((pattern_size // 2) * pattern_size)
+    )
+    pattern[:, 0 : pattern_size // 2] = 0
+    print(pattern)
+    array = do_scipy_convolve(
+        np.array(image),
+        pattern,
+    )
+
+    Image.fromarray(array).save("./output/ex5_directional_blur.jpeg")
+
+
 if __name__ == "__main__":
     # do_exercise1()
     # do_exercise2()
-    do_exercise3(10)
-    do_exercise4()
+    # do_exercise3(10)
+    # do_exercise4()
+    do_exercise5(10)
