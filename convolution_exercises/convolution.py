@@ -1,5 +1,6 @@
 import numpy as np
-from scipy.signal import convolve2d
+from scipy.signal import convolve2d, convolve
+from PIL import Image
 
 
 def do_convolution(matrix: np.ndarray, pattern: np.ndarray):
@@ -24,6 +25,13 @@ def do_convolution(matrix: np.ndarray, pattern: np.ndarray):
     return output
 
 
+def do_scipy_convolve(matrix: np.array, pattern: np.array) -> np.array:
+    for i in range(3):
+        # mode=same pour éviter que la sortie soit plus grande que l'entrée
+        matrix[:, :, i] = convolve2d(matrix[:, :, i], pattern, mode="same")
+    return matrix
+
+
 def do_exercise1():
     array = np.array([[2, 1, 3, 0], [1, 1, 0, 5], [3, 3, 1, 0], [2, 0, 0, 2]])
     pattern = np.array([[1, 0, 2], [2, 1, 0], [1, 0, 3]])
@@ -41,5 +49,13 @@ def do_exercise2():
     )
 
 
+def do_exercise3():
+    image = Image.open("./images/chat-vert.jpg")
+    array = do_scipy_convolve(
+        np.array(image), np.array([[1, 1, 1], [1, 1, 1], [1, 1, 1]]) / 9
+    )
+    Image.fromarray(array).save("./output/ex1_blur.jpeg")
+
+
 if __name__ == "__main__":
-    do_exercise2()
+    do_exercise3()
