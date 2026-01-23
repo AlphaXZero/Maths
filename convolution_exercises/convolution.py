@@ -80,7 +80,6 @@ def do_exercise5(pattern_size):
         np.array(image),
         pattern,
     )
-
     Image.fromarray(array).save("./output/ex5_directional_blur.jpeg")
 
 
@@ -94,10 +93,28 @@ def do_exercise6(size):
     Image.fromarray(result.astype(np.uint8)).save("./output/ex6_median_blur.jpeg")
 
 
+def do_exercise7(show_only_outline=False):
+    # TODO : dessin ??
+    image = Image.open("./images/chat-vert.jpg")
+    array = np.array(image).astype(float)
+    array = do_scipy_convolve(
+        array,
+        np.array(
+            [
+                [0, -0.5, 0],
+                [-0.5, 3 if not show_only_outline else 2, -0.5],
+                [0, -0.5, 0],
+            ]
+        ),
+    )
+    Image.fromarray(array.astype(np.uint8)).save("./output/ex7_outline.jpeg")
+
+
 if __name__ == "__main__":
     # do_exercise1()
     # do_exercise2()
     # do_exercise3(10)
     # do_exercise4()
     # do_exercise5(10)
-    do_exercise6(5)
+    # do_exercise6(5)
+    do_exercise7(True)
