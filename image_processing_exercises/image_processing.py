@@ -176,6 +176,17 @@ def do_exercise_13():
     return None
 
 
+def test_grey_conversion():
+    # TODO comment faire ?
+    image = Image.open("./images/chat-vert.jpg")
+    array = np.array(image)
+    for i in range(array.shape[0]):
+        for j in range(array.shape[1]):
+            gray = min(255, sum((array[i][j][0], array[i][j][1], array[i][j][2])) // 3)
+            array[i][j] = gray
+    Image.fromarray(array.astype(np.uint8)).save("./output/grey_test.jpeg")
+
+
 if __name__ == "__main__":
     # do_exercise_1()
     # do_exercise_2()
@@ -190,4 +201,5 @@ if __name__ == "__main__":
     # do_exercise_10()
     # do_exercise_11()
     # do_exercise_12((900, 900))
-    do_exercise_13()
+    # do_exercise_13()
+    test_grey_conversion()

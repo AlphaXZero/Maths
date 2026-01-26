@@ -117,4 +117,4 @@ if __name__ == "__main__":
     # do_exercise4()
     # do_exercise5(10)
     # do_exercise6(5)
-    do_exercise7(True)
+    do_exercise7()
