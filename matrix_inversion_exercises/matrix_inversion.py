@@ -1,5 +1,6 @@
 import random
 import math
+import numpy as np
 from typing import TypeAlias
 
 Matrix: TypeAlias = list[list[int]]
@@ -26,34 +27,43 @@ def divide_row(matrix: Matrix, row: int, k: int) -> Matrix:
 
 
 def determinant_gaussian(matrix: Matrix) -> float:
-    for i in range(len(matrix) - 1):
-        for j in range(len(matrix) - i - 1):
-            k = (
-                matrix[i + 1 + j][0 + i] / matrix[i][0 + i]
-                if matrix[i][0 + i] != 0
-                else 1
-            )
-            matrix = substract_row(matrix, i + 1 + j, i, k)
+    # TODO déterminatn quan 0
+    for i, row in enumerate(matrix):
+        if row[i] == 0:
+            return 0
+        for j in range(i + 1, len(matrix)):
+            k = matrix[j][i] / matrix[i][i]
+            matrix = substract_row(matrix, j, i, k)
     return math.prod([matrix[i][i] for i in range(len(matrix))])
 
 
 def gauss_jordan(matrix: Matrix):
-    for i in range(len(matrix[0])):
-        row_with_max = get_row_where_max_first_col(matrix)
-        if row_with_max != 0:
-            matrix = invert_row(matrix, 0, row_with_max)
-            matrix = divide_row(matrix, 0, matrix[0][0])
+    for padding in range(len(matrix[0]) - 1):
+        row_with_max = get_row_where_max_first_col(
+            [a[padding:] for a in matrix[padding:]], padding
+        )
+        print(row_with_max)
+        printm(matrix)
+        print("----------------")
+
+        if row_with_max != padding:
+            matrix = invert_row(matrix, padding, row_with_max)
+        matrix = divide_row(matrix, padding, matrix[padding][padding])
+        for i in range(1, len(matrix)):
+            matrix[i] = [
+                matrix[i][j] - matrix[padding][j] for j in range(len(matrix[0]))
+            ]
 
     return matrix
 
 
-def get_row_where_max_first_col(matrix: Matrix):
+def get_row_where_max_first_col(matrix: Matrix, target: int):
     maxi = -100000
     ind = 0
     for i, row in enumerate(matrix):
         if row[0] > maxi:
-            maxi, ind = row[0], i
-    return ind
+            maxi, ind = row[i], i
+    return ind + target
 
 
 def printm(matrix: Matrix) -> None:
@@ -72,18 +82,18 @@ def test_ex2():
     A = create_random_matrix((4, 4))
     print("random matrix", A)
     A = substract_row(A, 0, 1, 2)
-    print("maatrix with row 1 - 2 * row 2", A)
+    print("maatrix with row 1 - (2 * row 2)", A)
 
 
 def test_ex3():
-    oui = [[1, 3, 3, 1], [1, 4, 3, 0], [1, 3, 4, 2], [2, 1, 0, 1]]
     A = create_random_matrix((4, 4))
-    printm(oui)
-    print("----------------------")
-    oui = determinant_gaussian(oui)
-    printm(oui)
+    print("random matrix", A)
+    print("w/ np", np.linalg.det(A))
+    print("w/o np", determinant_gaussian(A))
 
 
 if __name__ == "__main__":
     oui = [[1, 3, 3, 1], [1, 4, 3, 0], [1, 3, 4, 2], [2, 1, 0, 1]]
-    print(gauss_jordan(oui))
+    oui2 = [[1, 1, 2], [1, 2, 1], [2, 1, 1]]
+    # print(gauss_jordan(oui))
+    test_ex3()
