@@ -26,11 +26,13 @@ def do_convolution(matrix: np.ndarray, pattern: np.ndarray):
     return output.astype(int)
 
 
-def do_scipy_convolve(matrix: np.array, pattern: np.array) -> np.array:
-    for i in range(3):
-        # mode=same pour éviter que la sortie soit plus grande que l'entrée
-        matrix[:, :, i] = convolve2d(matrix[:, :, i], pattern, mode="same")
-    return matrix.astype(np.uint8)
+def do_scipy_convolve(matrix: np.array, pattern: np.array, rgb=True) -> np.array:
+    if rgb:
+        for i in range(3):
+            # mode=same to avoid that entry is bigger than output
+            matrix[:, :, i] = convolve2d(matrix[:, :, i], pattern, mode="same")
+        return matrix.astype(np.uint8)
+    return convolve2d(matrix, pattern, mode="same")
 
 
 def do_exercise1():
@@ -110,6 +112,39 @@ def do_exercise7(show_only_outline=False):
     Image.fromarray(array.astype(np.uint8)).save("./output/ex7_outline.jpeg")
 
 
+def do_exercise8():
+    # convert in grey
+    image = Image.open("./images/chat-vert.jpg").convert("L")
+    array = np.array(image).astype(float)
+    array1 = do_scipy_convolve(
+        array,
+        np.array(
+            [
+                [-1, 0, 1],
+                [-2, 0, 2],
+                [-1, 0, 1],
+            ]
+        ),
+        rgb=False,
+    )
+    array2 = do_scipy_convolve(
+        array,
+        np.array(
+            [
+                [-1, -2, -1],
+                [0, 0, 0],
+                [1, 2, 1],
+            ]
+        ),
+        rgb=False,
+    )
+    # as suggested in the exercises statements
+    output = (array1**2 + array2**2) ** (1 / 2)
+    # standardization suggested by mistral because the image was too dark
+    output = output / output.max() * 255
+    Image.fromarray(output.astype(np.uint8)).save("./output/ex8_outline2.jpeg")
+
+
 if __name__ == "__main__":
     # do_exercise1()
     # do_exercise2()
@@ -117,4 +152,5 @@ if __name__ == "__main__":
     # do_exercise4()
     # do_exercise5(10)
     # do_exercise6(5)
-    do_exercise7()
+    # do_exercise7()
+    do_exercise8()
