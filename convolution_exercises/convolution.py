@@ -145,6 +145,11 @@ def do_exercise8():
     Image.fromarray(output.astype(np.uint8)).save("./output/ex8_outline2.jpeg")
 
 
+def do_exercise9():
+    # TODO:????
+    pass
+
+
 if __name__ == "__main__":
     # do_exercise1()
     # do_exercise2()
