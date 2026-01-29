@@ -3,7 +3,7 @@ import math
 import numpy as np
 from typing import TypeAlias
 
-Matrix: TypeAlias = list[list[int]]
+Matrix: TypeAlias = list[list[float]]
 Rowcol: TypeAlias = tuple[int, int]
 
 
@@ -85,8 +85,8 @@ def gauss_jordan_upper_triangular(matrix: Matrix, inv_matrix: Matrix) -> Matrix:
     return matrix, inv_matrix
 
 
-def gauss_jordan_inversion_matrix(matrix: Matrix) -> Matrix:
-    if determinant_gaussian(matrix) == 0:
+def gauss_jordan_inversion_matrix(matrix: Matrix) -> Matrix | None:
+    if determinant_gaussian([row[:] for row in matrix]) == 0:
         print("Matrix can't be inverted because the determinant is null")
         return [[]]
     inv_matrix = identity_matrix(matrix)
@@ -122,12 +122,25 @@ def test_ex3():
     print("w/o np", determinant_gaussian(A))
 
 
+def test_ex4():
+    wiki_matrix = [[2, -1, 0], [-1, 2, -1], [0, -1, 2]]
+    course_matrix = [[1, 1, 2], [1, 2, 1], [2, 1, 1]]
+    zero_det_matrix = [[1, 3, 3, 1], [1, 4, 3, 0], [1, 3, 4, 2], [2, 1, 0, 1]]
+    txt = ["matrix" + i for i in ["from wiki", "from course", "with zero determinant"]]
+    for i in zip(
+        [f"{i} before inversion:" for i in txt],
+        [wiki_matrix, course_matrix, zero_det_matrix],
+        [f"{i}, after inversion:" for i in txt],
+    ):
+        print(i[0])
+        printm(i[1])
+        print(i[2])
+        printm(gauss_jordan_inversion_matrix(i[1]))
+        print("-----------------------------")
+
+
 if __name__ == "__main__":
     # test_ex1()
     # test_ex2()
     # test_ex3()
-    oui = [[1, 3, 3, 1], [1, 4, 3, 0], [1, 3, 4, 2], [2, 1, 0, 1]]
-    oui2 = [[1, 1, 2], [1, 2, 1], [2, 1, 1]]
-    test_wiki = [[2, -1, 0], [-1, 2, -1], [0, -1, 2]]
-    printm(gauss_jordan_inversion_matrix(test_wiki))
-    # print(operation)
+    test_ex4()
