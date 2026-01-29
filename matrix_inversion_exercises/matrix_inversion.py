@@ -3,6 +3,9 @@ import math
 import numpy as np
 from typing import TypeAlias
 
+global operations
+operations = []
+
 Matrix: TypeAlias = list[list[int]]
 Rowcol: TypeAlias = tuple[int, int]
 
@@ -27,7 +30,7 @@ def divide_row(matrix: Matrix, row: int, k: int) -> Matrix:
 
 
 def determinant_gaussian(matrix: Matrix) -> float:
-    # TODO déterminatn quan 0
+    # TODO déterminatn quand 0 ??
     for i, row in enumerate(matrix):
         if row[i] == 0:
             return 0
@@ -37,33 +40,57 @@ def determinant_gaussian(matrix: Matrix) -> float:
     return math.prod([matrix[i][i] for i in range(len(matrix))])
 
 
-def gauss_jordan(matrix: Matrix):
-    for padding in range(len(matrix[0]) - 1):
-        row_with_max = get_row_where_max_first_col(
-            [a[padding:] for a in matrix[padding:]], padding
-        )
-        print(row_with_max)
-        printm(matrix)
-        print("----------------")
-
-        if row_with_max != padding:
-            matrix = invert_row(matrix, padding, row_with_max)
-        matrix = divide_row(matrix, padding, matrix[padding][padding])
-        for i in range(1, len(matrix)):
-            matrix[i] = [
-                matrix[i][j] - matrix[padding][j] for j in range(len(matrix[0]))
-            ]
-
-    return matrix
+def identity_matrix(matrix: Matrix) -> Matrix:
+    return [
+        [1 if i == j else 0 for j in range(len(row))] for i, row in enumerate(matrix)
+    ]
 
 
-def get_row_where_max_first_col(matrix: Matrix, target: int):
-    maxi = -100000
-    ind = 0
-    for i, row in enumerate(matrix):
-        if row[0] > maxi:
-            maxi, ind = row[i], i
-    return ind + target
+def gauss_jordan_lower_triangular(matrix: Matrix, output: Matrix) -> tuple[Matrix]:
+    """
+    Take the max value in each row's first column, then switch rows if the max is not in the first row (to avoid division by zero).
+    Divide the first row to get a 1 in the first column, then subtract this row from every other row with a coefficient if needed.
+    Repeat, starting with the second row and second column, and so on.
+    """
+    for actual_index in range(len(matrix) - 1):
+        line_where_max = [
+            i
+            for i in matrix
+            if i[actual_index] == max([i[actual_index] for i in matrix])
+        ][0]
+        if matrix.index(line_where_max) != actual_index:
+            matrix = invert_row(matrix, matrix.index(line_where_max), actual_index)
+            output = invert_row(output, matrix.index(line_where_max), actual_index)
+        output = divide_row(output, actual_index, line_where_max[actual_index])
+        matrix = divide_row(matrix, actual_index, line_where_max[actual_index])
+        for i in range(actual_index + 1, len(matrix)):
+            output = substract_row(output, i, actual_index, matrix[i][actual_index])
+            matrix = substract_row(matrix, i, actual_index, matrix[i][actual_index])
+    output = divide_row(output, -1, matrix[-1][-1] if matrix[-1][-1] != 0 else 1)
+    matrix = divide_row(matrix, -1, matrix[-1][-1] if matrix[-1][-1] != 0 else 1)
+    return matrix, output
+
+
+def gauss_jordan_upper_triangular(matrix: Matrix, output: Matrix) -> Matrix:
+    """
+    Start from the last column of the penultimate row (because it is the value we want to eliminate),
+    then eliminate that value using the row corresponding to the current column.
+    """
+    for i in range(len(matrix) - 2, -1, -1):
+        for j in range(i + 1, len(matrix)):
+            if matrix[i][j] != 0:
+                output = substract_row(output, i, j, matrix[i][j])
+                matrix = substract_row(matrix, i, j, matrix[i][j])
+    return matrix, output
+
+
+def gauss_jordan_inversion_matrix(matrix: Matrix) -> Matrix:
+    output = identity_matrix(matrix)
+    matrix, output = gauss_jordan_upper_triangular(
+        *gauss_jordan_lower_triangular(matrix, output)
+    )
+    printm(matrix)
+    return [[round(x, 2) for x in row] for row in output]
 
 
 def printm(matrix: Matrix) -> None:
@@ -93,7 +120,11 @@ def test_ex3():
 
 
 if __name__ == "__main__":
+    # test_ex1()
+    # test_ex2()
+    # test_ex3()
     oui = [[1, 3, 3, 1], [1, 4, 3, 0], [1, 3, 4, 2], [2, 1, 0, 1]]
     oui2 = [[1, 1, 2], [1, 2, 1], [2, 1, 1]]
-    # print(gauss_jordan(oui))
-    test_ex3()
+    test_wiki = [[2, -1, 0], [-1, 2, -1], [0, -1, 2]]
+    printm(gauss_jordan_inversion_matrix(test_wiki))
+    # print(operation)
