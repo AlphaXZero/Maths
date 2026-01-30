@@ -102,8 +102,13 @@ def format_equation_solution(reverted_matrix: Matrix, solution_matrix: Matrix) -
         print(solution_matrix[i])
 
 
-def system_of_equations_solver() -> Matrix:
-    matrix, solutions = ask_system_of_equations()
+def system_of_equations_solver(
+    default_matrix: Matrix = None, default_sols: Matrix = None
+) -> Matrix:
+    if default_matrix and default_sols:
+        matrix, solutions = default_matrix, default_sols
+    else:
+        matrix, solutions = ask_system_of_equations(default_matrix)
     if get_determinant_by_gauss([row[:] for row in matrix]) == 0:
         print("Matrix can't be inverted because the determinant is zero")
     matrix, solutions = do_gauss_backward_elimination(
@@ -180,9 +185,27 @@ def test_ex4():
         print("-----------------------------")
 
 
+def test_ex5():
+    print(system_of_equations_solver())
+
+
+def test_ex6():
+    matrix = [
+        [1, 2, 1, 0, 0],
+        [2, 1, 1, 1, 0],
+        [1, 0, 2, 2, 1],
+        [2, 1, 2, 1, 3],
+        [1, 0, 0, 2, 2],
+    ]
+    prices = [[55], [65.5], [80], [117.5], [63.5]]
+    print("marg 4_sais vege hawai napo")
+    print(system_of_equations_solver(matrix, prices))
+
+
 if __name__ == "__main__":
     # test_ex1()
     # test_ex2()
     # test_ex3()
     # test_ex4()
-    print(system_of_equations_solver())
+    # test_ex5()
+    test_ex6()
