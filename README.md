@@ -1,0 +1,2 @@
+The math exercise statements are available in the dedicated folder.
+Some solutions must be executed from their respective exercise directories due to path issues that may be resolved in future updates.
